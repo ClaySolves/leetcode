@@ -1,25 +1,26 @@
 class Solution:
-    def carFleet(self, target: int, position: list[int], speed: list[int]) -> int:
-        n = len(position)
-        myAns = []
-        sortedLists = sorted(zip(position,speed))
-        newPos, newSpeed = zip(*sortedLists)
+    def largestRectangleArea(self, heights: list[int]) -> int:
+        area = 0
+        stack = []
 
-        for i in range(n):
-            trips =(target-newPos[i])/newSpeed[i]
-            if myAns:
-                while trips >= myAns[-1]:
-                    myAns.pop()
-                    if not myAns: break
+        for i, h in enumerate(heights):
+            start = i
+            while stack and stack[-1][1] > h:
+                index,height = stack.pop()
+                area = max(area, height * (i-index))
+                start = index
+            stack.append((start,h))
 
-            myAns.append(trips)
+        for i, h in stack:
+            area = max(area, h * (len(heights) - i))
 
-        return int(len(myAns))
+        return area
+
             
 def main():
     solution = Solution()
-    print(solution.carFleet(
-        target = 31, position = [5,26,18,25,29,21,22,12,19,6], speed = [7,6,6,4,3,4,9,7,6,4]
+    print(solution.largestRectangleArea(
+        [2,1,5,6,2,3]
         ))
 
 if __name__ == "__main__":
